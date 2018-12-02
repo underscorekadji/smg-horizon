@@ -1,0 +1,45 @@
+{
+  "name": "horizon",
+  "version": "1.0.0",
+  "description": "Horizon - the REST API on Node.js and Express",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "serve": "nodemon --exec \" npm run lint  && node ./bin/www\"",
+    "start": "node ./bin/www",
+    "apidoc": "apidoc -i ./modules/ -o public/apidoc/",
+    "lint": "eslint src -c .eslintrc --ignore-path .gitignore --fix",
+    "prettify": "prettier --write",
+    "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "nodemon": "^1.18.7",
+    "prettier": "^1.15.2"
+  },
+  "dependencies": {
+    "@smg/client": "git+https://github.com/underscorekadji/smg-client.git#v1.0.0",
+    "await-to-js": "^2.1.1",
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "cors": "^2.8.5",
+    "debug": "^4.1.0",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "flatted": "^2.0.0",
+    "helmet": "^3.15.0",
+    "joi": "^14.3.0",
+    "jsonwebtoken": "^8.4.0",
+    "log-symbols": "^2.2.0",
+    "morgan": "^1.9.1",
+    "parse-error": "^0.2.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
+  }
+}
