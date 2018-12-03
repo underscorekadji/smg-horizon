@@ -6,7 +6,7 @@ const { version } = require('../../../package.json');
 const router = express.Router();
 
 const UserController = require('../controllers/user.controller');
-// const EmployeesController = require('../controllers/employees.controller');
+const EmployeesController = require('../controllers/employees.controller');
 
 require('../middleware/passport')(passport);
 
@@ -21,10 +21,10 @@ router.get('/', (req, res) => {
 
 router.post('/users/login', UserController.login);
 
-// router.get(
-//   '/employees',
-//   passport.authenticate('jwt', { session: false }),
-//   EmployeesController.getAll
-// );
+router.get(
+  '/employees',
+  passport.authenticate('jwt', { session: false }),
+  EmployeesController.getAll
+);
 
 module.exports = router;

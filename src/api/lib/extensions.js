@@ -55,3 +55,18 @@ module.exports.getJWT = function getJWT(data) {
     expiresIn: CONFIG.jwt.expiration
   })}`;
 };
+
+module.exports.decodeJWT = token => {
+  const parts = token.split(' ');
+  if (parts.length === 2) {
+    const scheme = parts[0];
+    const credentials = parts[1];
+
+    if (/^Bearer$/i.test(scheme)) {
+      const encrypted = credentials;
+      return jwt.verify(encrypted, CONFIG.jwt.secret);
+    }
+  }
+
+  return null;
+};

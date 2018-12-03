@@ -9,8 +9,6 @@ const chalk = require('chalk');
 
 const v1 = require('./api/routes');
 
-// const { description } = require('../package.json');
-
 const app = express();
 
 app.use(helmet());
