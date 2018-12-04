@@ -4,10 +4,12 @@ const cors = require('cors');
 const pe = require('parse-error');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const morgan = require('morgan');
-const chalk = require('chalk');
+const compression = require('./config/compression');
 
-const v1 = require('./api/routes');
+const swaggerDoc = require('./config/swagger.js');
+const morgan = require('./config/morgan');
+
+const routes = require('./api/routes');
 
 const app = express();
 
@@ -16,38 +18,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-// Morgan
-morgan.token('id', req => req.id);
+morgan(app);
 
-const loggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
-
-app.use(
-  morgan(chalk.red(loggerFormat), {
-    skip(req, res) {
-      return res.statusCode < 400;
-    },
-    stream: process.stderr
-  })
-);
-
-app.use(
-  morgan(loggerFormat, {
-    skip(req, res) {
-      return res.statusCode >= 400;
-    },
-    stream: process.stdout
-  })
-);
+compression(app);
 
 // Passport
 app.use(passport.initialize());
 
-app.use('/api/v1', v1);
+app.use('/api/v1', routes);
 
 // Health Route
 app.get('/health', (req, res) => {
   res.status(200).send();
 });
+
+swaggerDoc(app);
 
 app.get('*', (req, res) => res.status(404).send());
 
