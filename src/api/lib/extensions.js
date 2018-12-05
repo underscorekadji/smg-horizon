@@ -51,7 +51,8 @@ module.exports.toJson = function toJson(obj) {
 };
 
 module.exports.getJWT = function getJWT(data) {
-  return `Bearer ${jwt.sign({ token: data.token }, CONFIG.jwt.secret, {
+  const { token, profile } = data;
+  return `Bearer ${jwt.sign({ token, profile }, CONFIG.jwt.secret, {
     expiresIn: CONFIG.jwt.expiration
   })}`;
 };
