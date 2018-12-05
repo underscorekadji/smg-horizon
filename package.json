@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "serve": "nodemon --exec \" npm run lint  && node ./bin/www\"",
+    "docker:run": "docker-compose up",
     "start": "node ./bin/www",
     "apidoc": "apidoc -i ./modules/ -o public/apidoc/",
     "lint": "eslint src -c .eslintrc --ignore-path .gitignore --fix",
