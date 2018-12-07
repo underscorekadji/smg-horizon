@@ -51,13 +51,22 @@ const schema = joi
       .string()
       .valid('development', 'test', 'production')
       .default('development'),
-    PORT: joi.number().default(3001),
+    APP_PORT: joi.number().default(3001),
     SMG_HOST: joi
       .string()
       .regex(__webUrlRegExp)
       .default('https://smg.itechart-group.com/MobileServiceNew/MobileService.svc'),
     JWT_ENCRYPTION: joi.string().default('d3005471-fc17-45f1-b6aa-e82fb9604d56'),
-    JWT_EXPIRATION: joi.number().default(10000)
+    JWT_EXPIRATION: joi.number().default(10000),
+    REDIS_HOST: joi
+      .string()
+      .regex(__webUrlRegExp)
+      .default('127.0.0.1'),
+    REDIS_PORT: joi.number().default(6379),
+    REDIS_EXPIRE: joi
+      .number()
+      .positive()
+      .default(900) // 15 minute
   })
   .unknown()
   .required();
@@ -75,7 +84,12 @@ if (error) {
 module.exports = {
   app: {
     environment: envVars.NODE_ENV,
-    port: envVars.PORT
+    port: envVars.APP_PORT
+  },
+  redis: {
+    host: envVars.REDIS_HOST,
+    port: envVars.REDIS_PORT,
+    expiration: envVars.REDIS_EXPIRE
   },
   smg: {
     host: envVars.SMG_HOST

@@ -82,6 +82,6 @@ function onListening() {
 
   console.log(
     symbols.success,
-    `Express started on port ${host.port} in the ${CONFIG.app.environment} mode\n`
+    `Express started on port ${host.port} in the ${CONFIG.app.environment} mode`
   );
 }

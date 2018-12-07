@@ -1,11 +1,8 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-// const controller = require('../controllers/departments.controller');
+const controller = require('../controllers/departments.controller');
 
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { id } = req.params;
-  res.send(`Departments /${id}`);
-});
+router.get('/', passport.authenticate('jwt', { session: false }), controller.getAll);
 
 module.exports = router;

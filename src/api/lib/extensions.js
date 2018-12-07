@@ -3,12 +3,28 @@ const pe = require('parse-error');
 const { stringify } = require('flatted');
 const jwt = require('jsonwebtoken');
 const CONFIG = require('../../config');
+const redisClient = require('../services/redis.service');
 
 module.exports.to = async promise => {
   const [err, res] = await to(promise);
   if (err) return [pe(err)];
 
   return [null, res];
+};
+
+module.exports.toWithCache = async (promise, key, time = CONFIG.redis.expiration) => {
+  const storeKey = `__horizon__:${key}`;
+  const cacheString = await redisClient.getAsync(storeKey);
+  const cache = JSON.parse(cacheString);
+
+  if (!cache) {
+    const [error, res] = await to(promise);
+    if (error) return [pe(error)];
+    await redisClient.setAsync(storeKey, JSON.stringify(res.data), 'EX', time);
+    return [null, res.data];
+  }
+
+  return [null, cache];
 };
 
 /** Response Failure */
