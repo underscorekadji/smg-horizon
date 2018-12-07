@@ -17,7 +17,6 @@ module.exports.toWithCache = async (promise, key, time = CONFIG.redis.expiration
   const cache = await getCache(cacheKey);
 
   if (!cache) {
-    console.log('CACHE NOT FOUND!');
     const [error, res] = await to(promise);
     if (error) return [pe(error)];
     setCache(res, cacheKey, time);

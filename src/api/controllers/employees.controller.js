@@ -49,5 +49,5 @@ module.exports.getAllEmployeesByDeptId = async (req, res) => {
     req.originalUrl || req.url
   );
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data });
+  return ReS(res, data);
 };
