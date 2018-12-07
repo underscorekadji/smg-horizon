@@ -6,11 +6,11 @@ const CONFIG = require('../../config');
 
 module.exports.getAll = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
-  const [err, response] = await toWithCache(
-    getAllDepartments(token, CONFIG.smg.host),
+  const [err, data] = await toWithCache(
+    getAllDepartments(token, CONFIG.smg.host).then(response => response.data.Depts),
     req.originalUrl || req.url
   );
 
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data: response.Depts });
+  return ReS(res, data);
 };

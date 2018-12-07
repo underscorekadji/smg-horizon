@@ -11,43 +11,43 @@ const CONFIG = require('../../config');
 
 module.exports.getAll = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
-  const [err, response] = await toWithCache(
-    getAllEmployees(token, CONFIG.smg.host),
+  const [err, data] = await toWithCache(
+    getAllEmployees(token, CONFIG.smg.host).then(response => response.data.Profiles),
     req.originalUrl || req.url
   );
-
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data: response.Profiles });
+  return ReS(res, data);
 };
 
 module.exports.getAllWithShortModel = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
-  const [err, response] = await toWithCache(
-    getEmployeeShortInfo(true, token, CONFIG.smg.host),
+  const [err, data] = await toWithCache(
+    getEmployeeShortInfo(true, token, CONFIG.smg.host).then(response => response.data.Profiles),
     req.originalUrl || req.url
   );
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data: response.data.Profiles });
+  return ReS(res, data);
 };
 
 module.exports.getEmployeeByProfileId = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
   const { id } = req.params;
-  const [err, response] = await toWithCache(
-    getEmployeeDetails(id, token, CONFIG.smg.host),
+  const [err, data] = await toWithCache(
+    getEmployeeDetails(id, token, CONFIG.smg.host).then(response => response.data.Profile),
     req.originalUrl || req.url
   );
+  console.log(typeof data);
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data: response.data.Profile });
+  return ReS(res, data);
 };
 
 module.exports.getAllEmployeesByDeptId = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
   const { id } = req.params;
-  const [err, response] = await toWithCache(
-    getEmployeesByDeptId(id, token, CONFIG.smg.host),
+  const [err, data] = await toWithCache(
+    getEmployeesByDeptId(id, token, CONFIG.smg.host).then(response => response.data.Profiles),
     req.originalUrl || req.url
   );
   if (err) return ReE(res, err, status.BAD_REQUEST);
-  return ReS(res, { data: response.data.Profiles });
+  return ReS(res, { data });
 };

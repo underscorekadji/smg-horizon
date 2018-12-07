@@ -3,7 +3,7 @@ const pe = require('parse-error');
 const { stringify } = require('flatted');
 const jwt = require('jsonwebtoken');
 const CONFIG = require('../../config');
-const redisClient = require('../services/redis.service');
+const { getCache, setCache } = require('../lib/redis');
 
 module.exports.to = async promise => {
   const [err, res] = await to(promise);
@@ -13,15 +13,15 @@ module.exports.to = async promise => {
 };
 
 module.exports.toWithCache = async (promise, key, time = CONFIG.redis.expiration) => {
-  const storeKey = `__horizon__:${key}`;
-  const cacheString = await redisClient.getAsync(storeKey);
-  const cache = JSON.parse(cacheString);
+  const cacheKey = `${key}`;
+  const cache = await getCache(cacheKey);
 
   if (!cache) {
+    console.log('CACHE NOT FOUND!');
     const [error, res] = await to(promise);
     if (error) return [pe(error)];
-    await redisClient.setAsync(storeKey, JSON.stringify(res.data), 'EX', time);
-    return [null, res.data];
+    setCache(res, cacheKey, time);
+    return [null, JSON.stringify(res)];
   }
 
   return [null, cache];
@@ -36,20 +36,17 @@ module.exports.ReE = function ReE(res, err, code) {
 
   if (typeof code !== 'undefined') res.statusCode = code;
 
-  return res.json({ success: false, error });
+  return res.json(error);
 };
 
 /** Response Success */
 module.exports.ReS = function ReS(res, data, code) {
-  let result = { success: true };
-
-  if (typeof data === 'object') {
-    result = Object.assign(data, result);
-  }
-
   if (typeof code !== 'undefined') res.statusCode = code;
-
-  return res.json(result);
+  if (typeof data !== 'object') {
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(data);
+  }
+  return res.json(data);
 };
 
 /** Throw new Error */
