@@ -1,6 +1,7 @@
 const _ = require('lodash');
-const { createInstance, Instance } = require('@smg/client');
+const { createInstance } = require('@smg/client');
 const CONFIG = require('../../config');
+const { getCache, setCache } = require('../lib/redis');
 
 module.exports.authenticate = async (username, password) => {
   // Get sessionId as token
@@ -39,16 +40,12 @@ module.exports.authenticate = async (username, password) => {
   const result = await Promise.all(promises).then(data => data);
 
   const profile = _.find(result, async obj => obj.DomenName.toLowerCase() === username);
-
+  setCache({ token, profile }, `__auth__${token}`, 60 * 60);
   return { token, profile };
 };
 
 module.exports.verify = async token => {
-  const instance = new Instance('', '', CONFIG.smg.host);
-  const response = await instance.getAllDepartments(token);
-  if (response && !response.data.ErrorCode) {
-    return true;
-  }
-
+  const cache = await getCache(`__auth__${token}`);
+  if (cache) return true;
   return false;
 };
