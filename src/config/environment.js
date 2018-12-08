@@ -58,10 +58,7 @@ const schema = joi
       .default('https://smg.itechart-group.com/MobileServiceNew/MobileService.svc'),
     JWT_ENCRYPTION: joi.string().default('d3005471-fc17-45f1-b6aa-e82fb9604d56'),
     JWT_EXPIRATION: joi.number().default(10000),
-    REDIS_HOST: joi
-      .string()
-      .regex(__webUrlRegExp)
-      .default('127.0.0.1'),
+    REDIS_HOST: joi.string().default('127.0.0.1'),
     REDIS_PORT: joi.number().default(6379),
     REDIS_EXPIRE: joi
       .number()
