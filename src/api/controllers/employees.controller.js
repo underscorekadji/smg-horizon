@@ -21,8 +21,11 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getAllWithShortModel = async (req, res) => {
   const { token } = decodeJWT(req.headers.authorization);
+  const initialRequest = req.query.initialRequest || true;
   const [err, data] = await toWithCache(
-    getEmployeeShortInfo(true, token, CONFIG.smg.host).then(response => response.data.Profiles),
+    getEmployeeShortInfo(initialRequest, token, CONFIG.smg.host).then(
+      response => response.data.Profiles
+    ),
     req.originalUrl || req.url
   );
   if (err) return ReE(res, err, status.BAD_REQUEST);
