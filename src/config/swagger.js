@@ -4,12 +4,22 @@ const swaggerUi = require('swagger-ui-express');
 const options = {
   swaggerDefinition: {
     info: {
-      title: 'Test API',
-      version: '1.0.0',
-      description: 'Test Express API with auto-generated swagger doc'
-    }
+      title: 'Horizon API',
+      version: '1.0.0'
+    },
+    basePath: '/api/v1',
+    produces: ['application/json'],
+    consumes: ['application/json'],
+    securityDefinitions: {
+      Bearer: {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header'
+      }
+    },
+    security: [{ Bearer: [] }]
   },
-  apis: ['./routes/*.js']
+  apis: ['src/api/routes/*.js']
 };
 
 const specs = swaggerJsdoc(options);
