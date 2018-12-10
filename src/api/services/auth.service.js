@@ -11,7 +11,7 @@ module.exports.authenticate = async (username, password) => {
   if (token === '0') return { token: null, profileId: null };
 
   // Get all employees
-  const employees = await instance.getAllEmployees();
+  const employees = await instance.getEmployeeShortInfo();
 
   // Split the username into firstname and lastname.
   const parts = username.split('.');
